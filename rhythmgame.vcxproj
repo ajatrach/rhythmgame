@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="note.cpp" />
     <ClCompile Include="rhythmgame.cpp" />
     <ClCompile Include="conductor.cpp" />
   </ItemGroup>
