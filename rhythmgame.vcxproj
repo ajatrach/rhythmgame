@@ -139,9 +139,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="note.cpp" />
+    <ClCompile Include="Note.cpp" />
     <ClCompile Include="rhythmgame.cpp" />
-    <ClCompile Include="conductor.cpp" />
+    <ClCompile Include="Conductor.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Conductor.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -18,11 +18,16 @@
     <ClCompile Include="rhythmgame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="conductor.cpp">
+    <ClCompile Include="Conductor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="note.cpp">
+    <ClCompile Include="Note.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Conductor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

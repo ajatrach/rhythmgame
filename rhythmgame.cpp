@@ -1,10 +1,9 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <sstream>
+#include "Conductor.h"
 
 using namespace sf;
-//player position
-enum class side { LEFT, RIGHT, NONE };
 
 int main() {
     VideoMode vm(1920, 1080);
@@ -25,51 +24,38 @@ int main() {
     spriteBg.setPosition(0, 0);
 
     // create 4 squares
-    Texture textureBlock;
-    textureBlock.loadFromFile("assets/graphics/square.png");
-    Sprite vertBlock;
-    vertBlock.setTexture(textureBlock);
-    vertBlock.setPosition(100, 100);
-
-    Sprite vertBlock2;
-    vertBlock2.setTexture(textureBlock);
-    vertBlock2.setPosition(250, 100);
-
-    Sprite vertBlock3;
-    vertBlock3.setTexture(textureBlock);
-    vertBlock3.setPosition(400, 100);
-
-    Sprite vertBlock4;
-    vertBlock4.setTexture(textureBlock);
-    vertBlock4.setPosition(550, 100);
-
-    // create sprite for animate object
-    Sprite key;
-    key.setTexture(textureBlock);
-    key.setPosition(50, 20);
+    Texture notepadtex;
+    notepadtex.loadFromFile("assets/graphics/square.png");
+    Sprite notepads[4];
+    int xposnotepad = 120;
+    int yposnotepad = 100;
+    for (int i = 0; i < 4; i++) {
+        notepads[i].setTexture(notepadtex);
+        notepads[i].setPosition(xposnotepad, yposnotepad);
+        xposnotepad = xposnotepad + 180;
+    }
+ 
+    // create moving sprites
+    //notes initialization
+    bool notesactive = false;
+    Texture notetex;
+    notetex.loadFromFile("assets/graphics/square.png");
+    Sprite notes[4];
+    for (int i = 0; i < 4; i++) {
+        notes[i].setTexture(notetex);
+        notes[i].setPosition(50, 20);
+    }
+    
 
     float speed = 0;
     Clock clock;
 
-    // status bar for time
-    RectangleShape statusBar;
-    float barStartWidth = 400;
-    float barHeight = 80;
-    statusBar.setSize(Vector2f(barStartWidth, barHeight));
-    statusBar.setFillColor(Color::Blue);
-    statusBar.setPosition((1920 / 2) - barStartWidth / 2, 20);
-
-    // manage game timer
-    Time totalTime;
-    float timeRemaining = 20.0f;
-    float barWidthPerSec = barStartWidth / timeRemaining;
 
     // declare and initialise score
     int score = 1;
 
-    // reset timer and game score
+    // reset game score
     score = 0;
-    timeRemaining = 20;
 
     // record if game is active or paused
     bool paused = true;
@@ -100,17 +86,12 @@ int main() {
         textRect.height / 2.0f);
     msgText.setPosition(1920 / 2.0f, 1080 / 2.0f);
 
-    sf::Music music;
-    if (!music.openFromFile("assets/music/music.wav"))
-        return -1; // error
-    music.play();
-
-    //ball initialization
-    bool keysactive = false;
-
+   
     //input intitialization
     bool acceptInput = false;
+    bool songstarted = false;
 
+    Conductor conductor;
 
     while (window.isOpen())
     {
@@ -150,25 +131,6 @@ int main() {
         if (!paused) {
             // measure delta time - time between two updates
             Time dt = clock.restart();
-            // subtract from time remaining
-            timeRemaining -= dt.asSeconds();
-            // size the status bar relative to timer
-            statusBar.setSize(Vector2f(barWidthPerSec * timeRemaining, barHeight));
-
-            // check when timer ends
-            if (timeRemaining <= 0.0f) {
-                // pause the game
-                paused = true;
-                // update message shown to player
-                msgText.setString("That's enough time...");
-                // reposition msgText bounding box relative to new text
-                FloatRect textRect = msgText.getLocalBounds();
-                msgText.setOrigin(textRect.left +
-                    textRect.width / 2.0f,
-                    textRect.top +
-                    textRect.height / 2.0f);
-                msgText.setPosition(1920 / 2.0f, 1080 / 2.0f);
-            }
 
             scoreText.setPosition(20, 20);
             //for updating score
@@ -181,55 +143,49 @@ int main() {
             if (Keyboard::isKeyPressed(Keyboard::Up)) {
                 acceptInput = false;
             }
-            // check game window boundary - right edge
-                // - x value includes width of sprite obj
-            //if (spritePlayer.getPosition().x > 2020) {
-                // reset player posn to left edge of game window
-                // start sprite obj outside of window boundary to avoid sprite jumping
-                // - i.e. sprite smoothly scrolls onto window instead of
-                // automatically resetting to start of visible window
-            //    spritePlayer.setPosition(-40, spritePlayer.getPosition().y);
-           // }
-            // check game window boundary - left edge
-           // if (spritePlayer.getPosition().x < 0) {
-                // reset player posn to right edge of game window
-            //    spritePlayer.setPosition(40, spritePlayer.getPosition().y);
-          //  }
 
 
-            // set up the keys
-            if (!keysactive) {
-                // how fast is the ball
+            // set up the moving notes
+            if (!notesactive) {
                 speed = (rand() % 200) + 200;
-                // how high is the ball
                 float height = 1080;
-                key.setPosition(100, height);
-                keysactive = true;
+                int notexpos = 120;
+                for (int i = 0; i < 4; i++) {
+                    notes[i].setPosition(notexpos, height);
+                    notexpos = notexpos + 180;
+                }
+                notesactive = true;
             }
             else {
                 //value of dt.asSeconds() will be a fraction of 1
                 //represents time previous frame of animation took to complete
                 //calculation ensures rate of animation is same regardless of potential differences in underlying system performance
-                key.setPosition(key.getPosition().x, key.getPosition().y- speed *(dt.asSeconds()));
-                // check if ball has reached left window edge
-                if (key.getPosition().y < -100) {
-                    // reset ball ready for next frame
-                    keysactive = false;
+                for (int i = 0; i < 4; i++) {
+                    notes[i].setPosition(notes[i].getPosition().x, notes[i].getPosition().y - speed * (dt.asSeconds()));
+                    // check if notes have reached top
+                    if (notes[i].getPosition().y < -100) {
+                        // reset notes ready for next frame
+                        notesactive = false;
+                    }
                 }
             }
 
+            if (!songstarted) {
+                conductor.conSetup();      //would take a data file with song info
+                //clock.getElapsedTime().asMilliseconds()
+                conductor.conStart();         //starting the conductor class
+                songstarted = true;
+            }
+            //conductor.conUpdate(1);            //update conductor class
         
             window.draw(spriteBg);
-            window.draw(vertBlock);
-            window.draw(vertBlock);
-            window.draw(vertBlock2);
-            window.draw(vertBlock3);
-            window.draw(vertBlock4);
-            window.draw(key);
+            for (int i = 0; i < 4; i++) {
+                window.draw(notepads[i]);
+            }
+            for (int i = 0; i < 4; i++) {
+                window.draw(notes[i]);
+            }
             window.draw(scoreText);
-            // draw status bar
-            window.draw(statusBar);
-
 
         }
         window.display();
