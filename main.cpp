@@ -172,8 +172,7 @@ int main() {
 
             if (!songstarted) {
                 conductor.conSetup();      //would take a data file with song info
-                //clock.getElapsedTime().asMilliseconds()
-                conductor.conStart();         //starting the conductor class
+                conductor.conStart(clock.getElapsedTime().asMilliseconds());         //starting the conductor class
                 songstarted = true;
             }
             //conductor.conUpdate(1);            //update conductor class

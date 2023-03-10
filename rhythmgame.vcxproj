@@ -140,7 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Note.cpp" />
-    <ClCompile Include="rhythmgame.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="Conductor.cpp" />
   </ItemGroup>
   <ItemGroup>

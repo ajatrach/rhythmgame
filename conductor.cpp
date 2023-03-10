@@ -30,22 +30,21 @@ void Conductor::conSetup() {    //would take a data file with song info
 	songPositionBeats = 0;
 	dspSongTime = 0;
 	firstBeatOffset = 0;
+	//load audio source
+	if (!music.openFromFile("assets/music/music.wav")) {
+		std::cout << "ERROR" << std::endl; // error
+	}
 	std::cout << "success" << std::endl;
 }
 
 
-void Conductor::conStart() {
-	//load audio source
-	std::cout << "success" << std::endl;
-	//if (!music.openFromFile("assets/music/music.wav")) {
-	//	std::cout << "ERROR" << std::endl; // error
-	//}
+void Conductor::conStart(float time) {
 		//calculated number of seconds in each beat
-		//secPerBeat = 60 / bmp;
+	secPerBeat = 60 / bmp;
 		//time that music started
-		//dspSongTime = time;
+	dspSongTime = time;
 		//start song
-	//music.play();
+	music.play();
 	std::cout << "success" << std::endl;
 
 }

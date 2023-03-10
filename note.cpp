@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <vector>
-#include "conductor.h"
+#include "Conductor.h"
 
 class note {
 public:

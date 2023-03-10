@@ -11,7 +11,7 @@ public:
 	float songPositionBeats; //song position in beats
 	float dspSongTime;       //time that song starts
 	float firstBeatOffset;   //in case there is silence before first beat
-	void conStart();
+	void conStart(float time);
 	void conUpdate(float time);
 	void conSetup();
 };
