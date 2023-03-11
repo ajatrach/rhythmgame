@@ -2,14 +2,15 @@
 #include <SFML/Audio.hpp>
 #include <sstream>
 #include "Conductor.h"
+#include "GameWindow.h"
 
 using namespace sf;
+GameWindow w;
 
 int main() {
     VideoMode vm(1920, 1080);
     //create window   /RenderWindow window(vm, "Basictemplate", Style::Fullscreen);
     RenderWindow window(vm, "Basictemplate");
-    
     // define a texture - holds graphics on GPU
     Texture textureBg;
     // load graphic on texture
@@ -39,7 +40,7 @@ int main() {
     //notes initialization
     bool notesactive = false;
     Texture notetex;
-    notetex.loadFromFile("assets/graphics/square.png");
+    notetex.loadFromFile("assets/graphics/note.png");
     Sprite notes[4];
     for (int i = 0; i < 4; i++) {
         notes[i].setTexture(notetex);
@@ -148,6 +149,7 @@ int main() {
             // set up the moving notes
             if (!notesactive) {
                 speed = (rand() % 200) + 200;
+                speed = 200;
                 float height = 1080;
                 int notexpos = 120;
                 for (int i = 0; i < 4; i++) {
@@ -175,7 +177,11 @@ int main() {
                 conductor.conStart(clock.getElapsedTime().asMilliseconds());         //starting the conductor class
                 songstarted = true;
             }
-            //conductor.conUpdate(1);            //update conductor class
+            if (songstarted) {
+                conductor.conUpdate(clock.getElapsedTime().asMilliseconds());            //update conductor class
+                
+            }
+            
         
             window.draw(spriteBg);
             for (int i = 0; i < 4; i++) {
