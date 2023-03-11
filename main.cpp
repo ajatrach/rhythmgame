@@ -2,10 +2,8 @@
 #include <SFML/Audio.hpp>
 #include <sstream>
 #include "Conductor.h"
-#include "GameWindow.h"
 
 using namespace sf;
-GameWindow w;
 
 int main() {
     VideoMode vm(1920, 1080);

@@ -142,12 +142,10 @@
     <ClCompile Include="Note.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Conductor.cpp" />
-    <ClCompile Include="GameWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Conductor.h" />
     <ClInclude Include="Note.h" />
-    <ClInclude Include="GameWindow.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
